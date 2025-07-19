@@ -261,7 +261,7 @@
         }
 
         .text-muted {
-                color: var(--text-light);
+                color: var(--text-light) !important;
         }
 
         @keyframes slideIn {
