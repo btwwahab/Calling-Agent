@@ -426,7 +426,7 @@ body {
 /* Feature cards styling */
 .glass-card .fa-3x {
     margin-bottom: 16px !important;
-    filter: drop-shadow(0 0 8px currentColor);
+    /* filter: drop-shadow(0 0 8px currentColor); */
 }
 
 h5 {
