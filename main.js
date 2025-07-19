@@ -181,8 +181,8 @@ function setSatisfaction(percent) {
 }
 
 // Example usage:
-setTotalCalls(1247);      // Initial value
-setSatisfaction(98);      // Initial value
+setTotalCalls(1247);    
+setSatisfaction(98);  
 
 // You can update these dynamically, for example:
 function incrementTotalCalls() {
