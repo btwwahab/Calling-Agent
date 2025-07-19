@@ -7,12 +7,23 @@ function startVoiceInput(callback) {
 
   recognition.onresult = async (event) => {
     const userText = event.results[0][0].transcript;
-    console.log("User said:", userText);
     if (callback) callback(userText);
   };
 
   recognition.onerror = (event) => {
-    console.error("Speech recognition error:", event.error);
+    if (aiCallActive && (event.error === "no-speech" || event.error === "network")) {
+      // Optionally, show a message to the user
+      addMessage('System', "I didn't catch that. Please try speaking again, and keep each message under 10 seconds for best results.", 'ai');
+      // Restart recognition after a short delay
+      setTimeout(() => startVoiceInput(callback), 200);
+    }
+  };
+
+  recognition.onend = () => {
+    if (aiCallActive) {
+      // Restart recognition after a short delay
+      setTimeout(() => startVoiceInput(callback), 200);
+    }
   };
 
   recognition.start();
