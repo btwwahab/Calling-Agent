@@ -23,7 +23,10 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: "llama3-70b-8192",
         messages: [
-          { role: "system", content: "You are a helpful voice AI assistant." },
+          {
+            role: "system",
+            content: "You are a helpful AI voice assistant. Reply in a friendly, natural, and conversational way, as if you are speaking. Keep your answers brief and to the point, like real spoken conversation. Avoid long or overly detailed responses."
+          },
           { role: "user", content: userMessage }
         ],
         temperature: 0.7,
