@@ -172,5 +172,25 @@ function addMessage(sender, text, type) {
     conversationArea.scrollTop = conversationArea.scrollHeight;
 }
 
+function setTotalCalls(count) {
+    document.getElementById('totalCalls').textContent = count.toLocaleString();
+}
+
+function setSatisfaction(percent) {
+    document.getElementById('satisfaction').textContent = percent + '%';
+}
+
+// Example usage:
+setTotalCalls(1247);      // Initial value
+setSatisfaction(98);      // Initial value
+
+// You can update these dynamically, for example:
+function incrementTotalCalls() {
+    let current = parseInt(document.getElementById('totalCalls').textContent.replace(/,/g, ''));
+    setTotalCalls(current + 1);
+}
+
+// Call incrementTotalCalls() whenever a call is completed
+
 // Initialize
 createParticles();
