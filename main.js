@@ -62,7 +62,8 @@ async function endCall() {
     document.getElementById('callStatus').textContent = 'Call ended';
     document.getElementById('voiceWave').style.display = 'none';
 
-    // REMOVE Agora cleanup block here
+    // Example: Randomly update satisfaction
+    setSatisfaction(95 + Math.floor(Math.random() * 5)); // 95%–99%
 
     setTimeout(() => {
         document.getElementById('callStatus').textContent = 'Waiting for call...';
