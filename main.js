@@ -1,15 +1,5 @@
 // main.js
 
-// Agora config
-let AGORA_APP_ID = '';
-fetch('/api/agora')
-  .then(res => res.json())
-  .then(data => { AGORA_APP_ID = data.appId; });
-const CHANNEL_NAME = 'groqVoice';
-let agoraClient;
-let localAudioTrack;
-let remoteUsers = {};
-
 // Create floating particles
 function createParticles() {
     const particlesContainer = document.getElementById('particles');
@@ -48,17 +38,7 @@ async function startCall() {
     document.getElementById('callStatus').textContent = 'Call in progress...';
     document.getElementById('voiceWave').style.display = 'flex';
 
-    // Agora logic
-    try {
-        console.log("⏳ Connecting to Agora...");
-        agoraClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-        await agoraClient.join(AGORA_APP_ID, CHANNEL_NAME, null, null);
-        localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-        await agoraClient.publish([localAudioTrack]);
-        console.log("✅ Agora audio connected");
-    } catch (error) {
-        console.error("Agora Init Error:", error);
-    }
+    // REMOVE Agora logic block here
 
     setTimeout(() => {
         addMessage('AI Agent', 'Call connected! How can I assist you today?', 'ai');
@@ -72,20 +52,7 @@ async function endCall() {
     document.getElementById('callStatus').textContent = 'Call ended';
     document.getElementById('voiceWave').style.display = 'none';
 
-    // Agora cleanup
-    try {
-        if (localAudioTrack) {
-            localAudioTrack.stop();
-            localAudioTrack.close();
-        }
-        if (agoraClient) {
-            await agoraClient.leave();
-            console.log("👋 Left Agora channel.");
-        }
-        speak("Thank you for the call. Goodbye!");
-    } catch (error) {
-        console.error("End Call Error:", error);
-    }
+    // REMOVE Agora cleanup block here
 
     setTimeout(() => {
         document.getElementById('callStatus').textContent = 'Waiting for call...';
@@ -94,39 +61,18 @@ async function endCall() {
     if (typeof stopAIConversation === "function") stopAIConversation();
 }
 
-// Mute/Unmute
-function muteMic() {
-    if (localAudioTrack) {
-        localAudioTrack.setEnabled(false);
-        console.log("🎤 Muted");
-    }
-    isMuted = true;
-    window.isMuted = true;
-}
-
-function unmuteMic() {
-    if (localAudioTrack) {
-        localAudioTrack.setEnabled(true);
-        console.log("🎙️ Unmuted");
-    }
-    isMuted = false;
-    window.isMuted = false;
-}
-
 // Update toggleMute to use above
 function toggleMute() {
+    isMuted = !isMuted;
+    window.isMuted = isMuted;
+    const muteBtn = document.getElementById('muteBtn');
+    const icon = muteBtn.querySelector('i');
     if (isMuted) {
-        unmuteMic();
-        const muteBtn = document.getElementById('muteBtn');
-        const icon = muteBtn.querySelector('i');
-        icon.className = 'fas fa-microphone';
-        muteBtn.style.background = 'var(--glass-bg)';
-    } else {
-        muteMic();
-        const muteBtn = document.getElementById('muteBtn');
-        const icon = muteBtn.querySelector('i');
         icon.className = 'fas fa-microphone-slash';
         muteBtn.style.background = 'linear-gradient(45deg, #f44336, #da190b)';
+    } else {
+        icon.className = 'fas fa-microphone';
+        muteBtn.style.background = 'var(--glass-bg)';
     }
 }
 
