@@ -33,12 +33,22 @@ document.getElementById('muteBtn').addEventListener('click', function () {
     toggleMute();
 });
 
+function incrementTotalCalls() {
+    let current = parseInt(document.getElementById('totalCalls').textContent.replace(/,/g, ''));
+    setTotalCalls(current + 1);
+}
+
+function setTotalCalls(count) {
+    document.getElementById('totalCalls').textContent = count.toLocaleString();
+}
+
+// In startCall:
 async function startCall() {
     isCallActive = true;
     document.getElementById('callStatus').textContent = 'Call in progress...';
     document.getElementById('voiceWave').style.display = 'flex';
 
-    // REMOVE Agora logic block here
+    incrementTotalCalls();
 
     setTimeout(() => {
         addMessage('AI Agent', 'Call connected! How can I assist you today?', 'ai');
@@ -118,25 +128,9 @@ function addMessage(sender, text, type) {
     conversationArea.scrollTop = conversationArea.scrollHeight;
 }
 
-function setTotalCalls(count) {
-    document.getElementById('totalCalls').textContent = count.toLocaleString();
-}
-
 function setSatisfaction(percent) {
     document.getElementById('satisfaction').textContent = percent + '%';
 }
-
-// Example usage:
-setTotalCalls(1247);    
-setSatisfaction(98);  
-
-// You can update these dynamically, for example:
-function incrementTotalCalls() {
-    let current = parseInt(document.getElementById('totalCalls').textContent.replace(/,/g, ''));
-    setTotalCalls(current + 1);
-}
-
-// Call incrementTotalCalls() whenever a call is completed
 
 // Initialize
 createParticles();
