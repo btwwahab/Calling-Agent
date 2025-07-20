@@ -445,6 +445,8 @@ h5 {
     .ai-avatar {
         width: 140px;
         height: 140px;
+        margin-top: 25px;
+        margin-bottom: 60px;
     }
     
     .control-button {
@@ -456,5 +458,9 @@ h5 {
     .conversation-area {
         max-height: 300px;
         padding: 16px;
+    }
+    
+    .navbar-nav{
+        display: none;
     }
 }
