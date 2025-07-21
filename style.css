@@ -514,7 +514,7 @@ footer {
 }
 
 #aiMood {
-    display: inline-block;
+    /* display: inline-block; */
     transition: transform 0.25s, filter 0.25s;
 }
 

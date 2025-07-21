@@ -56,9 +56,9 @@ function updateSessionDuration() {
 }
 
 const MOODS = {
-    idle: '😊',
+    idle: '🤖',
     active: '🟢',
-    listening: '👂',
+    listening: '🎧',
     thinking: '💭',
     speaking: '🗣️',
     angry: '😠',
