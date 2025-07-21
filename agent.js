@@ -67,11 +67,34 @@ function startAIConversation() {
       setTimeout(conversationLoop, 500);
       return;
     }
+    // Set listening mood before starting voice input
+    setAIMood(MOODS.listening);
     startVoiceInput(async (userMessage) => {
       addMessage('You', userMessage, 'user');
+
+      // Mood detection for angry/happy
+      if (/abuse|badword|idiot|stupid/i.test(userMessage)) {
+        setAIMood(MOODS.angry);
+        setTimeout(() => setAIMood(MOODS.idle), 1500);
+        if (aiCallActive) conversationLoop();
+        return;
+      }
+      if (/thank|great|awesome|good|nice|love/i.test(userMessage)) {
+        setAIMood(MOODS.happy);
+        setTimeout(() => setAIMood(MOODS.idle), 1500);
+        if (aiCallActive) conversationLoop();
+        return;
+      }
+
+      // Thinking mood before AI responds
+      setAIMood(MOODS.thinking);
       const aiResponse = await askGroq(userMessage);
+
+      // Speaking mood while AI is speaking
+      setAIMood(MOODS.speaking);
       addMessage('AI Agent', aiResponse, 'ai');
       speak(aiResponse, () => {
+        setAIMood(MOODS.idle);
         if (aiCallActive) conversationLoop();
       });
     });
