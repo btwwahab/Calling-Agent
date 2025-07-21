@@ -55,6 +55,16 @@ function updateSessionDuration() {
     document.getElementById('sessionDuration').textContent = `${mins}:${secs}`;
 }
 
+const MOODS = {
+    idle: '😊',
+    active: '🟢',
+    listening: '👂',
+    thinking: '💭',
+    speaking: '🗣️',
+    angry: '😠',
+    happy: '😄'
+};
+
 function setAIMood(mood) {
     const moodElem = document.getElementById('aiMood');
     if (moodElem) {
@@ -69,6 +79,7 @@ function setAIMood(mood) {
     }
 }
 
+
 // Example: Change mood on call start/end
 async function startCall() {
     isCallActive = true;
@@ -76,7 +87,7 @@ async function startCall() {
     document.getElementById('voiceWave').style.display = 'flex';
 
     startSessionTimer();
-    setAIMood('🟢'); // Active
+    setAIMood(MOODS.active); // Active
 
     setTimeout(() => {
         addMessage('AI Agent', 'Call connected! How can I assist you today?', 'ai');
@@ -91,7 +102,7 @@ async function endCall() {
     document.getElementById('voiceWave').style.display = 'none';
 
     stopSessionTimer();
-    setAIMood('😊'); // Idle/Happy
+    setAIMood(MOODS.idle); // Idle/Happy
 
     setTimeout(() => {
         document.getElementById('callStatus').textContent = 'Waiting for call...';
@@ -129,23 +140,47 @@ function sendMessage() {
     const message = input.value.trim();
 
     if (message) {
+        setAIMood(MOODS.listening); // Show listening while user is sending
+
         addMessage('You', message, 'user');
         input.value = '';
 
-        // Simulate AI response
+        // Detect angry mood
+        if (/abuse|badword|idiot|stupid/i.test(message)) {
+            setAIMood(MOODS.angry);
+            setTimeout(() => setAIMood(MOODS.idle), 1500);
+            return; // Stop further processing
+        }
+
+        // Detect happy mood
+        if (/thank|great|awesome|good|nice|love/i.test(message)) {
+            setAIMood(MOODS.happy);
+            setTimeout(() => setAIMood(MOODS.idle), 1500);
+            // Optionally, you can return here if you don't want AI to respond to happy messages
+            // return;
+        }
+
+        // Thinking before AI responds
         setTimeout(() => {
-            const responses = [
-                'I understand your concern. Let me help you with that.',
-                'That\'s a great question! Here\'s what I think...',
-                'I\'m processing your request. Please give me a moment.',
-                'Based on what you\'ve told me, I recommend...',
-                'Thank you for that information. How else can I assist?'
-            ];
-            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-            addMessage('AI Agent', randomResponse, 'ai');
-        }, 1000 + Math.random() * 2000);
+            setAIMood(MOODS.thinking);
+
+            setTimeout(() => {
+                setAIMood(MOODS.speaking);
+                addMessage('AI Agent', 'Here is my response!', 'ai');
+                setTimeout(() => setAIMood(MOODS.idle), 1500);
+            }, 1200);
+
+        }, 400);
     }
 }
+
+document.getElementById('messageInput').addEventListener('input', function () {
+    if (this.value.trim().length > 0) {
+        setAIMood(MOODS.listening);
+    } else {
+        setAIMood(MOODS.idle);
+    }
+});
 
 function addMessage(sender, text, type) {
     const conversationArea = document.getElementById('conversationArea');
