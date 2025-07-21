@@ -157,7 +157,7 @@ function sendMessage() {
             setAIMood(MOODS.happy);
             setTimeout(() => setAIMood(MOODS.idle), 1500);
             // Optionally, you can return here if you don't want AI to respond to happy messages
-            // return;
+            return;
         }
 
         // Thinking before AI responds
