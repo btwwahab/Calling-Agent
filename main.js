@@ -33,22 +33,40 @@ document.getElementById('muteBtn').addEventListener('click', function () {
     toggleMute();
 });
 
-function incrementTotalCalls() {
-    let current = parseInt(document.getElementById('totalCalls').textContent.replace(/,/g, ''));
-    setTotalCalls(current + 1);
+let sessionTimer = null;
+let sessionSeconds = 0;
+
+function startSessionTimer() {
+    sessionSeconds = 0;
+    updateSessionDuration();
+    sessionTimer = setInterval(() => {
+        sessionSeconds++;
+        updateSessionDuration();
+    }, 1000);
 }
 
-function setTotalCalls(count) {
-    document.getElementById('totalCalls').textContent = count.toLocaleString();
+function stopSessionTimer() {
+    clearInterval(sessionTimer);
 }
 
-// In startCall:
+function updateSessionDuration() {
+    const mins = String(Math.floor(sessionSeconds / 60)).padStart(2, '0');
+    const secs = String(sessionSeconds % 60).padStart(2, '0');
+    document.getElementById('sessionDuration').textContent = `${mins}:${secs}`;
+}
+
+function setAIMood(mood) {
+    document.getElementById('aiMood').textContent = mood;
+}
+
+// Example: Change mood on call start/end
 async function startCall() {
     isCallActive = true;
     document.getElementById('callStatus').textContent = 'Call in progress...';
     document.getElementById('voiceWave').style.display = 'flex';
 
-    incrementTotalCalls();
+    startSessionTimer();
+    setAIMood('🟢'); // Active
 
     setTimeout(() => {
         addMessage('AI Agent', 'Call connected! How can I assist you today?', 'ai');
@@ -62,8 +80,8 @@ async function endCall() {
     document.getElementById('callStatus').textContent = 'Call ended';
     document.getElementById('voiceWave').style.display = 'none';
 
-    // Example: Randomly update satisfaction
-    setSatisfaction(95 + Math.floor(Math.random() * 5)); // 95%–99%
+    stopSessionTimer();
+    setAIMood('😊'); // Idle/Happy
 
     setTimeout(() => {
         document.getElementById('callStatus').textContent = 'Waiting for call...';
